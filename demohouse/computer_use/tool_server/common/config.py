@@ -27,11 +27,24 @@ class LoggingSettings(BaseModel):
     backup_count: int = 5
     max_bytes: int = 1024 * 1024 * 100
 
+
+class PluginsSettings(BaseModel):
+    enable_https: bool = False
+
+
+class SSLSettings(BaseModel):
+    server_cert: str = ""
+    server_key: str = ""
+
+
 class Settings(BaseSettings):
     port: int = 8102
     display: str = ":5"
     log: LoggingSettings = LoggingSettings()
     screenshot_dir: str = "/tmp"
+    auth_key: str = ""
+    plugins: PluginsSettings = PluginsSettings()
+    ssl: SSLSettings = SSLSettings()
     model_config = SettingsConfigDict(
         env_prefix='',
         env_nested_delimiter='__',

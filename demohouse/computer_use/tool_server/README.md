@@ -113,3 +113,24 @@ computer-use-tool-server/
 ## Configuration
 
 Configuration can be set through the `config.toml` file, primarily containing server port, logging level, and other parameters.
+
+### Authentication & HTTPS
+
+The tool server supports a simple API-key based authentication and TLS:
+
+```toml
+# Shared API key. Clients must send it via the `X-API-Key` (or `Authorization`) header.
+# Leave empty to disable authentication.
+auth_key = "your-secret-api-key-here"
+
+[plugins]
+# Enable HTTPS so that the auth_key header is not transmitted in plain text.
+enable_https = true
+
+[ssl]
+# Absolute paths to the server certificate / private key, required when plugins.enable_https = true.
+server_cert = "/absolute/path/to/server.crt"
+server_key  = "/absolute/path/to/server.key"
+```
+
+When `plugins.enable_https = true`, `main.py` will start uvicorn with the configured certificate / key. Clients (e.g. `mcp_server`) should configure the matching `client_ca` to validate the server certificate.
