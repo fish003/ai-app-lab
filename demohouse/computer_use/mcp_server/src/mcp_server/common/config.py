@@ -36,3 +36,5 @@ settings = Dynaconf(
 
 log_config = settings.get("logging", {})
 tool_server_config = settings.get("tool_server", {})
+plugins_config = settings.get("plugins", {})
+ssl_config = settings.get("ssl", {})

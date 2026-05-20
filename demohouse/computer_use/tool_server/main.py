@@ -12,9 +12,11 @@
 import uuid
 from fastapi import FastAPI
 from services.router import router
+from common.config import get_settings
 from common.logger import configure_logging
 from asgi_correlation_id import CorrelationIdMiddleware
 from middleware.request_id import RequestIDMiddleware
+from middleware.auth import AuthMiddleware
 
 app = FastAPI(
     title="computer_use",
@@ -22,4 +24,30 @@ app = FastAPI(
 app.include_router(router)
 app.add_middleware(RequestIDMiddleware)
 app.add_middleware(CorrelationIdMiddleware)
+app.add_middleware(AuthMiddleware)
 configure_logging()
+
+
+def main():
+    import uvicorn
+
+    settings = get_settings()
+
+    uvicorn_kwargs = {
+        "host": "0.0.0.0",
+        "port": settings.port,
+    }
+
+    if settings.plugins.enable_https:
+        if not settings.ssl.server_cert or not settings.ssl.server_key:
+            raise RuntimeError(
+                "plugins.enable_https is True but ssl.server_cert / ssl.server_key are not configured."
+            )
+        uvicorn_kwargs["ssl_certfile"] = settings.ssl.server_cert
+        uvicorn_kwargs["ssl_keyfile"] = settings.ssl.server_key
+
+    uvicorn.run(app, **uvicorn_kwargs)
+
+
+if __name__ == "__main__":
+    main()
