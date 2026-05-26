@@ -1,14 +1,14 @@
 import type { UserConfig } from '@commitlint/types';
-import { RuleConfigSeverity } from '@commitlint/types';
+
+const ErrorSeverity = 2;
 
 const Configuration: UserConfig = {
 
     extends: ['@commitlint/config-conventional'],
-    parserPreset: 'conventional-changelog-atom',
     formatter: '@commitlint/format',
     rules: {
         'type-enum': [
-            RuleConfigSeverity.Error,
+                ErrorSeverity,
             'always',
             [
                 'docs',
@@ -23,9 +23,9 @@ const Configuration: UserConfig = {
                 'license',
             ],
         ],
-        'scope-case': [RuleConfigSeverity.Error, 'always', 'lower-case'],
-        'subject-max-length': [RuleConfigSeverity.Error, 'always', 100],
-        'validate-scope': [RuleConfigSeverity.Error, 'always'],
+        'scope-case': [ErrorSeverity, 'always', 'lower-case'],
+        'subject-max-length': [ErrorSeverity, 'always', 100],
+        'validate-scope': [ErrorSeverity, 'always'],
     },
     plugins: [
         {
